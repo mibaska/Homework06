@@ -1,2 +1,2 @@
-# Homework06-1
+# Homework06
 The Sixth Homework

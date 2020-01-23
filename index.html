@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <title>Weather App</title>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <nav class="navbar navbar-dark bg-dark">
+      <h1 class="text-light text-center">Weather Dashboard</h1>
+    </nav>
+    <div class="container">
+      <br/>
+      <br/>
+      <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="search" placeholder="City" aria-label="Search" id="aleph">
+        <input class="form-control mr-sm-2" type="search" placeholder="Country Code" aria-label="Search" id="beth">
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit" id="gimel">Enter</button>
+      </form>
+      <div class="btn-group-vertical" id="daleth"></div>
+      <div id="he"></div>
+    </div>
+    <script>
+      var city = "";
+      var countrycode = "";
+      var queryURL = "";
+
+      var fullDate = new Date();
+      
+      var twoDigitMonth = ((fullDate.getMonth().length+1) === 1)? (fullDate.getMonth()+1) : '0' + (fullDate.getMonth()+1);
+      
+      var currentDate = twoDigitMonth + "/" + fullDate.getDate() + "/" + fullDate.getFullYear();
+
+      $("#gimel").click(function(event){
+        event.preventDefault();
+
+        var count = $('#daleth button').length;
+        if(count === 5) {
+          $("#daleth").empty();
+        }
+
+        city = $("#aleph").val();
+        countryCode = $("#beth").val();
+        queryURL = "https://api.openweathermap.org/data/2.5/forecast?q="+city+","+countryCode+"&appid=6a113eb8426787cd511c64f735add7ba";
+        
+        $.ajax({
+          url: queryURL,
+          method: "GET"
+        }).done(function(response) {
+          $("#he").empty();
+          localStorage.setItem("URL", queryURL);
+          var header = $("<h1>");
+          header.text(response.city.name + " (" + currentDate + ")");
+          header.attr("class", "text-center");
+          $("#he").append(header);
+
+          var divIota = $("<div>");
+          divIota.attr("id", "iota");
+          $("#he").append(divIota);
+
+          var pKappa = $("<p>");
+          pKappa.attr("id", "kappa");
+          var celsius0 = response.list[0].main.temp - 273.15;
+          var fahrenheit0 = Math.trunc((celsius0 * (9/5))+32);
+          pKappa.text("Temperature: " + fahrenheit0 + "°F");
+          divIota.append(pKappa);
+
+          var pLambda = $("<p>");
+          pLambda.attr("id", "lambda");
+          pLambda.text("Humidity: " + response.list[0].main.humidity + "%");
+          divIota.append(pLambda);
+
+          var pMu = $("<p>");
+          pMu.attr("id", "mu");
+          pMu.text("Wind Speed: " + response.list[0].wind.speed + " MPH");
+          divIota.append(pMu);
+
+          var divVau = $("<div>");
+          divVau.addClass("card");
+          divVau.attr("style", "width: 18rem;");
+          divVau.attr("id", "vau");
+          $("#he").append(divVau);
+
+          var divVauBody = $("<div>");
+          divVauBody.addClass("card-body");
+          $("#he").append(divVauBody);
+
+          var pZain = $("<p>");
+          pZain.addClass("card-text text-center");
+          pZain.attr("id", "zain");
+          pZain.text(response.list[8].dt_txt);
+          divVau.append(pZain);
+
+          var pCheth = $("<p>");
+          pCheth.addClass("card-text text-center");
+          pCheth.attr("id", "cheth");
+          pCheth.text(response.list[8].weather[0].main);
+          divVau.append(pCheth);
+
+          var pTheth = $("<p>");
+          pTheth.addClass("card-text text-center");
+          pTheth.attr("id", "theth");
+          var celsius1 = response.list[8].main.temp - 273.15;
+          var fahrenheit1 = Math.trunc((celsius1 * (9/5))+32);
+          pTheth.text("Temp: " + fahrenheit1 + "°F");
+          divVau.append(pTheth);
+
+          var pIod = $("<p>");
+          pIod.addClass("card-text text-center");
+          pIod.attr("id", "iod");
+          pIod.text("Humidity: " + response.list[8].main.humidity + "%");
+          divVau.append(pIod);
+
+          var divCaph = $("<div>");
+          divCaph.addClass("card");
+          divCaph.attr("style", "width: 18rem;");
+          divCaph.attr("id", "caph");
+          $("#he").append(divCaph);
+
+          var divCaphBody = $("<div>");
+          divCaphBody.addClass("card-body");
+          $("#he").append(divCaphBody);
+
+          var pLamed = $("<p>");
+          pLamed.addClass("card-text text-center");
+          pLamed.attr("id", "lamed");
+          pLamed.text(response.list[16].dt_txt);
+          divCaph.append(pLamed);
+
+          var pMem = $("<p>");
+          pMem.addClass("card-text text-center");
+          pMem.attr("id", "mem");
+          pMem.text(response.list[16].weather[0].main);
+          divCaph.append(pMem);
+
+          var pNun = $("<p>");
+          pNun.addClass("card-text text-center");
+          pNun.attr("id", "nun");
+          var celsius2 = response.list[16].main.temp - 273.15;
+          var fahrenheit2 = Math.trunc((celsius2 * (9/5))+32);
+          pNun.text("Temp: " + fahrenheit2 + "°F");
+          divCaph.append(pNun);
+
+          var pSamech = $("<p>");
+          pSamech.addClass("card-text text-center");
+          pSamech.attr("id", "samech");
+          pSamech.text("Humidity: " + response.list[16].main.humidity + "%");
+          divCaph.append(pSamech);
+
+          var divAin = $("<div>");
+          divAin.addClass("card");
+          divAin.attr("style", "width: 18rem;");
+          divAin.attr("id", "ain");
+          $("#he").append(divAin);
+
+          var divAinBody = $("<div>");
+          divAinBody.addClass("card-body");
+          $("#he").append(divAinBody);
+
+          var pPe = $("<p>");
+          pPe.addClass("card-text text-center");
+          pPe.attr("id", "pe");
+          pPe.text(response.list[24].dt_txt);
+          divAin.append(pPe);
+
+          var pZade = $("<p>");
+          pZade.addClass("card-text text-center");
+          pZade.attr("id", "zade");
+          pZade.text(response.list[24].weather[0].main);
+          divAin.append(pZade);
+
+          var pKuff = $("<p>");
+          pKuff.addClass("card-text text-center");
+          pKuff.attr("id", "kuff");
+          var celsius3 = response.list[24].main.temp - 273.15;
+          var fahrenheit3 = Math.trunc((celsius3 * (9/5))+32);
+          pKuff.text("Temp: " + fahrenheit3 + "°F");
+          divAin.append(pKuff);
+
+          var pRes = $("<p>");
+          pRes.addClass("card-text text-center");
+          pRes.attr("id", "res");
+          pRes.text("Humidity: " + response.list[24].main.humidity + "%");
+          divAin.append(pRes);
+
+          var divShin = $("<div>");
+          divShin.addClass("card");
+          divShin.attr("style", "width: 18rem;");
+          divShin.attr("id", "shin");
+          $("#he").append(divShin);
+
+          var divShinBody = $("<div>");
+          divShinBody.addClass("card-body");
+          $("#he").append(divShinBody);
+
+          var pTau = $("<p>");
+          pTau.addClass("card-text text-center");
+          pTau.attr("id", "tau");
+          pTau.text(response.list[32].dt_txt);
+          divShin.append(pTau);
+
+          var pAlpha = $("<p>");
+          pAlpha.addClass("card-text text-center");
+          pAlpha.attr("id", "alpha");
+          pAlpha.text(response.list[32].weather[0].main);
+          divShin.append(pAlpha);
+
+          var pBeta = $("<p>");
+          pBeta.addClass("card-text text-center");
+          pBeta.attr("id", "beta");
+          var celsius4 = response.list[32].main.temp - 273.15;
+          var fahrenheit4 = Math.trunc((celsius4 * (9/5))+32);
+          pBeta.text("Temp: " + fahrenheit4 + "°F");
+          divShin.append(pBeta);
+
+          var pGamma = $("<p>");
+          pGamma.addClass("card-text text-center");
+          pGamma.attr("id", "gamma");
+          pGamma.text("Humidity: " + response.list[32].main.humidity + "%");
+          divShin.append(pGamma);
+
+          var divDelta = $("<div>");
+          divDelta.addClass("card");
+          divDelta.attr("style", "width: 18rem;");
+          divDelta.attr("id", "delta");
+          $("#he").append(divDelta);
+
+          var divDeltaBody = $("<div>");
+          divDeltaBody.addClass("card-body");
+          $("#he").append(divDeltaBody);
+
+          var pEpsilon = $("<p>");
+          pEpsilon.addClass("card-text text-center");
+          pEpsilon.attr("id", "epsilon");
+          pEpsilon.text(response.list[39].dt_txt);
+          divDelta.append(pEpsilon);
+
+          var pZeta = $("<p>");
+          pZeta.addClass("card-text text-center");
+          pZeta.attr("id", "zeta");
+          pZeta.text(response.list[39].weather[0].main);
+          divDelta.append(pZeta);
+
+          var pEta = $("<p>");
+          pEta.addClass("card-text text-center");
+          pEta.attr("id", "eta");
+          var celsius5 = response.list[39].main.temp - 273.15;
+          var fahrenheit5 = Math.trunc((celsius5 * (9/5))+32);
+          pEta.text("Temp: " + fahrenheit5 + "°F");
+          divDelta.append(pEta);
+
+          var pTheta = $("<p>");
+          pTheta.addClass("card-text text-center");
+          pTheta.attr("id", "theta");
+          pTheta.text("Humidity: " + response.list[39].main.humidity + "%");
+          divDelta.append(pTheta);
+          
+          var historyLink = $("<button>");
+          historyLink.addClass("btn btn-secondary");
+          historyLink.attr("type", countryCode);
+          historyLink.text(city);
+          $("#daleth").prepend(historyLink);
+
+          historyLink.click(function(event) {
+            city = historyLink.text();
+            countryCode = historyLink.attr("type");
+
+            $("#he").empty();
+            header = $("<h1>");
+            header.text(response.city.name + " (" + currentDate + ")");
+            header.attr("class", "text-center");
+            $("#he").append(header);
+
+            divIota = $("<div>");
+            divIota.attr("id", "iota");
+            $("#he").append(divIota);
+
+            pKappa = $("<p>");
+            pKappa.attr("id", "kappa");
+            celsius0 = response.list[0].main.temp - 273.15;
+            fahrenheit0 = Math.trunc((celsius0 * (9/5))+32);
+            pKappa.text("Temperature: " + fahrenheit0 + "°F");
+            divIota.append(pKappa);
+
+            pLambda = $("<p>");
+            pLambda.attr("id", "lambda");
+            pLambda.text("Humidity: " + response.list[0].main.humidity + "%");
+            divIota.append(pLambda);
+
+            pMu = $("<p>");
+            pMu.attr("id", "mu");
+            pMu.text("Wind Speed: " + response.list[0].wind.speed + " MPH");
+            divIota.append(pMu);
+
+            divVau = $("<div>");
+            divVau.addClass("card");
+            divVau.attr("style", "width: 18rem;");
+            divVau.attr("id", "vau");
+            $("#he").append(divVau);
+
+            divVauBody = $("<div>");
+            divVauBody.addClass("card-body");
+            $("#he").append(divVauBody);
+
+            pZain = $("<p>");
+            pZain.addClass("card-text text-center");
+            pZain.attr("id", "zain");
+            pZain.text(response.list[8].dt_txt);
+            divVau.append(pZain);
+
+            pCheth = $("<p>");
+            pCheth.addClass("card-text text-center");
+            pCheth.attr("id", "cheth");
+            pCheth.text(response.list[8].weather[0].main);
+            divVau.append(pCheth);
+
+            pTheth = $("<p>");
+            pTheth.addClass("card-text text-center");
+            pTheth.attr("id", "theth");
+            celsius1 = response.list[8].main.temp - 273.15;
+            fahrenheit1 = Math.trunc((celsius1 * (9/5))+32);
+            pTheth.text("Temp: " + fahrenheit1 + "°F");
+            divVau.append(pTheth);
+
+            pIod = $("<p>");
+            pIod.addClass("card-text text-center");
+            pIod.attr("id", "iod");
+            pIod.text("Humidity: " + response.list[8].main.humidity + "%");
+            divVau.append(pIod);
+
+            divCaph = $("<div>");
+            divCaph.addClass("card");
+            divCaph.attr("style", "width: 18rem;");
+            divCaph.attr("id", "caph");
+            $("#he").append(divCaph);
+
+            divCaphBody = $("<div>");
+            divCaphBody.addClass("card-body");
+            $("#he").append(divCaphBody);
+
+            pLamed = $("<p>");
+            pLamed.addClass("card-text text-center");
+            pLamed.attr("id", "lamed");
+            pLamed.text(response.list[16].dt_txt);
+            divCaph.append(pLamed);
+
+            pMem = $("<p>");
+            pMem.addClass("card-text text-center");
+            pMem.attr("id", "mem");
+            pMem.text(response.list[16].weather[0].main);
+            divCaph.append(pMem);
+
+            pNun = $("<p>");
+            pNun.addClass("card-text text-center");
+            pNun.attr("id", "nun");
+            celsius2 = response.list[16].main.temp - 273.15;
+            fahrenheit2 = Math.trunc((celsius2 * (9/5))+32);
+            pNun.text("Temp: " + fahrenheit2 + "°F");
+            divCaph.append(pNun);
+
+            pSamech = $("<p>");
+            pSamech.addClass("card-text text-center");
+            pSamech.attr("id", "samech");
+            pSamech.text("Humidity: " + response.list[16].main.humidity + "%");
+            divCaph.append(pSamech);
+
+            divAin = $("<div>");
+            divAin.addClass("card");
+            divAin.attr("style", "width: 18rem;");
+            divAin.attr("id", "ain");
+            $("#he").append(divAin);
+
+            divAinBody = $("<div>");
+            divAinBody.addClass("card-body");
+            $("#he").append(divAinBody);
+
+            pPe = $("<p>");
+            pPe.addClass("card-text text-center");
+            pPe.attr("id", "pe");
+            pPe.text(response.list[24].dt_txt);
+            divAin.append(pPe);
+
+            pZade = $("<p>");
+            pZade.addClass("card-text text-center");
+            pZade.attr("id", "zade");
+            pZade.text(response.list[24].weather[0].main);
+            divAin.append(pZade);
+
+            pKuff = $("<p>");
+            pKuff.addClass("card-text text-center");
+            pKuff.attr("id", "kuff");
+            celsius3 = response.list[24].main.temp - 273.15;
+            fahrenheit3 = Math.trunc((celsius3 * (9/5))+32);
+            pKuff.text("Temp: " + fahrenheit3 + "°F");
+            divAin.append(pKuff);
+
+            pRes = $("<p>");
+            pRes.addClass("card-text text-center");
+            pRes.attr("id", "res");
+            pRes.text("Humidity: " + response.list[24].main.humidity + "%");
+            divAin.append(pRes);
+
+            divShin = $("<div>");
+            divShin.addClass("card");
+            divShin.attr("style", "width: 18rem;");
+            divShin.attr("id", "shin");
+            $("#he").append(divShin);
+
+            divShinBody = $("<div>");
+            divShinBody.addClass("card-body");
+            $("#he").append(divShinBody);
+
+            pTau = $("<p>");
+            pTau.addClass("card-text text-center");
+            pTau.attr("id", "tau");
+            pTau.text(response.list[32].dt_txt);
+            divShin.append(pTau);
+
+            pAlpha = $("<p>");
+            pAlpha.addClass("card-text text-center");
+            pAlpha.attr("id", "alpha");
+            pAlpha.text(response.list[32].weather[0].main);
+            divShin.append(pAlpha);
+
+            pBeta = $("<p>");
+            pBeta.addClass("card-text text-center");
+            pBeta.attr("id", "beta");
+            celsius4 = response.list[32].main.temp - 273.15;
+            fahrenheit4 = Math.trunc((celsius4 * (9/5))+32);
+            pBeta.text("Temp: " + fahrenheit4 + "°F");
+            divShin.append(pBeta);
+
+            pGamma = $("<p>");
+            pGamma.addClass("card-text text-center");
+            pGamma.attr("id", "gamma");
+            pGamma.text("Humidity: " + response.list[32].main.humidity + "%");
+            divShin.append(pGamma);
+
+            divDelta = $("<div>");
+            divDelta.addClass("card");
+            divDelta.attr("style", "width: 18rem;");
+            divDelta.attr("id", "delta");
+            $("#he").append(divDelta);
+
+            divDeltaBody = $("<div>");
+            divDeltaBody.addClass("card-body");
+            $("#he").append(divDeltaBody);
+
+            pEpsilon = $("<p>");
+            pEpsilon.addClass("card-text text-center");
+            pEpsilon.attr("id", "epsilon");
+            pEpsilon.text(response.list[39].dt_txt);
+            divDelta.append(pEpsilon);
+
+            pZeta = $("<p>");
+            pZeta.addClass("card-text text-center");
+            pZeta.attr("id", "zeta");
+            pZeta.text(response.list[39].weather[0].main);
+            divDelta.append(pZeta);
+
+            pEta = $("<p>");
+            pEta.addClass("card-text text-center");
+            pEta.attr("id", "eta");
+            celsius5 = response.list[39].main.temp - 273.15;
+            fahrenheit5 = Math.trunc((celsius5 * (9/5))+32);
+            pBeta.text("Temp: " + fahrenheit5 + "°F");
+            divDelta.append(pEta);
+
+            pTheta = $("<p>");
+            pTheta.addClass("card-text text-center");
+            pTheta.attr("id", "theta");
+            pTheta.text("Humidity: " + response.list[39].main.humidity + "%");
+            divDelta.append(pTheta);
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
